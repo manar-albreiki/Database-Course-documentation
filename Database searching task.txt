@@ -1,0 +1,19 @@
+1. Comparison Assignment
+---------------------------------------------------------------
+| Feature             | Flat File System                      | Relational Database                           |
+---------------------------------------------------------------
+| Structure           | Single file (CSV, text) with no       | Multiple structured tables with defined       |
+|                     | enforced schema.                      | schemas.                                      |
+---------------------------------------------------------------
+| Data Redundancy     | High redundancy; repeated values      | Low redundancy; normalization and use of      |
+|                     | stored multiple times.                | keys reduce duplication.                      |
+---------------------------------------------------------------
+| Relationships       | No support for relationships          | Supports 1:1, 1:M, and M:M relationships       |
+|                     | between data.                         | using primary and foreign keys.               |
+---------------------------------------------------------------
+| Example Usage       | Logs, configuration files, simple     | Banking systems, e-commerce platforms,        |
+|                     | datasets, attendance lists.           | hospital and enterprise systems.              |
+---------------------------------------------------------------
+| Drawbacks           | Hard to scale, prone to duplication   | Requires setup, maintenance, and technical    |
+|                     | and inconsistency, limited querying.  | knowledge; structure may become complex.      |
+---------------------------------------------------------------
