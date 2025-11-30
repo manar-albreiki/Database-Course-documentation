@@ -17,8 +17,10 @@
 | Drawbacks           | Hard to scale, prone to duplication   | Requires setup, maintenance, and technical    |
 |                     | and inconsistency, limited querying.  | knowledge; structure may become complex.      |
 ---------------------------------------------------------------
+---
 2. DBMS Advantages Mind Map
 
+---
 3. Roles in a Database System
 
 - System Analyst
@@ -38,5 +40,47 @@ An application developer creates the software that interacts with the database. 
 
 - BI (Business Intelligence) Developer
 A BI developer works with data to support decision-making. They design dashboards, reports, and analytics solutions, transforming raw data into meaningful insights using tools like Power BI, Tableau, or SQL-based reporting.
+
+Here’s the **Types of Databases mind map content in clear bullet-point format with descriptions**:
+
+---
+Types of Databases
+
+
+1. Relational Databases (RDBMS)
+
+* Stores data in structured tables with rows and columns.
+* Relationships are enforced using primary and foreign keys.
+* Best for applications requiring consistent and accurate data.
+* Examples: MySQL, PostgreSQL, Oracle.
+* Use cases: Banking systems, e-commerce platforms, HR management systems.
+
+2. Non-Relational Databases (NoSQL)
+
+* Stores data in flexible formats such as documents, key-value pairs, wide-column, or graphs.
+* Schema-less design allows handling large volumes of unstructured or semi-structured data.
+* Ideal for applications requiring scalability and fast access to diverse data.
+* Examples: MongoDB (document), Cassandra (wide-column), Redis (key-value), Neo4j (graph).
+* Use cases: Social media apps, IoT applications, real-time analytics, content management systems.
+
+3. Centralized Databases
+
+* All data is stored in a single server or location.
+* Simple to manage and maintain, but limited scalability.
+* Use cases: Small businesses or single-location organizations.
+
+4. Distributed Databases
+
+* Data is stored across multiple servers or physical locations.
+* Provides scalability, fault tolerance, and high availability.
+* Use cases: Global banking systems, airline reservation networks, logistics platforms.
+
+5. Cloud Databases
+
+* Hosted on cloud infrastructure and managed by cloud providers.
+* Offers scalability, automatic backups, high availability, and remote access.
+* Can be relational or non-relational.
+* Use cases: SaaS applications, e-commerce platforms, mobile apps, big data platforms.
+
 
 
