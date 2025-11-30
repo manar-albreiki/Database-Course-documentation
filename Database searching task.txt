@@ -17,3 +17,26 @@
 | Drawbacks           | Hard to scale, prone to duplication   | Requires setup, maintenance, and technical    |
 |                     | and inconsistency, limited querying.  | knowledge; structure may become complex.      |
 ---------------------------------------------------------------
+2. DBMS Advantages Mind Map
+
+3. Roles in a Database System
+
+- System Analyst
+A system analyst studies the needs of an organization and determines how technology can solve business problems. They act as a bridge between users and technical teams, analyzing requirements, creating system specifications, and ensuring the final solution meets user expectations.
+
+- Database Designer
+A database designer is responsible for planning how data will be stored, structured, and organized. They create the conceptual, logical, and physical database models, ensuring efficiency, proper relationships, and normalization before development begins.
+
+- Database Developer
+A database developer builds and implements the database based on the design. They write SQL queries, stored procedures, triggers, and functions, ensuring that the database supports applications efficiently and accurately.
+
+- DBA (Database Administrator)
+A DBA manages and maintains the database after it is deployed. Their duties include monitoring performance, controlling user access, performing backups and recovery, and ensuring data security, reliability, and availability.
+
+- Application Developer
+An application developer creates the software that interacts with the database. They develop user interfaces and application logic, ensuring the system communicates with the database correctly while providing a smooth user experience.
+
+- BI (Business Intelligence) Developer
+A BI developer works with data to support decision-making. They design dashboards, reports, and analytics solutions, transforming raw data into meaningful insights using tools like Power BI, Tableau, or SQL-based reporting.
+
+
