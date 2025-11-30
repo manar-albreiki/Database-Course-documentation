@@ -113,6 +113,41 @@ Examples of Cloud-Based Databases
 * Google Cloud Spanner
 
 ---
+Database Engines and Languages
+
+
+What is a Database Engine?
+
+* A database engine is the core software component of a database system that stores, retrieves, and manages data.
+* It handles tasks like query processing, transaction management, indexing, and data storage.
+* Essentially, it is the “heart” of a database system that executes commands and manages data efficiently.
+
+Examples of Database Engines
+
+* SQL Server
+* MySQL
+* Oracle Database
+* PostgreSQL
+
+Languages Used by Database Engines
+
+* SQL Server uses T-SQL (Transact-SQL), an extension of standard SQL.
+* Oracle uses PL/SQL (Procedural Language/SQL), which adds procedural programming features to SQL.
+* MySQL and PostgreSQL use standard ANSI SQL, though PostgreSQL also supports procedural extensions like PL/pgSQL.
+
+Relationship Between Engine and Language
+
+* The database engine interprets and executes commands written in its supported query language.
+* Some engines have proprietary extensions (like T-SQL or PL/SQL) to add extra functionality beyond standard SQL.
+* The choice of engine often dictates which language or extensions you use.
+
+Cross-Engine Language Compatibility
+
+* Standard SQL commands (ANSI SQL) can work across multiple database engines.
+* However, proprietary extensions (T-SQL, PL/SQL) are specific to their engine and may not run on other databases without modification.
+* Developers often use standard SQL for basic queries and engine-specific features when advanced functionality is needed.
+
+---
 
 
 
