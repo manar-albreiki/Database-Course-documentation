@@ -1,7 +1,7 @@
-CREATE DATABASE company
-use company
+CREATE DATABASE CompanyDB
+use CompanyDB
 GO
-CREATE TABLE emps(
+CREATE TABLE EMPs(
 	Fname nvarchar(20) not null,
 	Mname nvarchar(20),
 	Lname nvarchar(20) not null,
@@ -9,41 +9,42 @@ CREATE TABLE emps(
 	Bdate date,
 	Gender bit default 0,
 	Super_ssn int,
-	foreign key (Super_ssn) references emps(SSN)
+	foreign key (Super_ssn) references EMPs(SSN)
 )
-CREATE TABLE Depratments(
+CREATE TABLE DEPTs(
 Dnum INT PRIMARY KEY identity (1,1),
 Dname VARCHAR(30) NOT NULL,
 Mgr_SSN int,
-foreign key (Mgr_SSN) references emps(SSN),
+foreign key (Mgr_SSN) references EMPs(SSN),
 Hiringdate DATE,
 )
-CREATE TABLE locations(
+CREATE TABLE LOCATIONs(
 Dnum int,
 DLocations VARCHAR(30) NOT NULL,
-foreign key (Dnum) references Depratments(Dnum),
+foreign key (Dnum) references DEPTs(Dnum),
 primary key (Dnum, DLocations),
 )
-CREATE TABLE project(
+CREATE TABLE PROJECTs(
 Pnumber int primary key identity (1,1),
 Pname VARCHAR(30) NOT NULL,
 Pcity VARCHAR(30) NOT NULL,
 PLocation VARCHAR(30) NOT NULL,
 Dnum int,
-foreign key (Dnum) references Depratments(Dnum),
+foreign key (Dnum) references DEPTs(Dnum),
 )
-CREATE TABLE Dependents(
+CREATE TABLE DEPENDENTs(
 DependentsName VARCHAR(50) NOT NULL,
 Dependentsgender BIT DEFAULT 0,
 DependentsDOB DATE,
 SSN int,
-foreign key (SSN) references emps(SSN),
+foreign key (SSN) references EMPs(SSN),
 )
-CREATE TABLE Employee_Work(
+CREATE TABLE EMPs_Work(
 SSN int,
 Pnumber int,
-foreign key (SSN) references emps(SSN),
-foreign key (Pnumber) references project(Pnumber),
+foreign key (SSN) references EMPs(SSN),
+foreign key (Pnumber) references PROJECTs(Pnumber),
 primary key (SSN, Pnumber),
 WorkingHours int,
 )
+
