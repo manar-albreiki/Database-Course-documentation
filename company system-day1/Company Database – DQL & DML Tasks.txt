@@ -1,0 +1,107 @@
+-- 1. Display all employee data. 
+select * from Employee
+
+
+-- 2. Display employee first name, last name, salary, and department number. 
+SELECT Fname, Lname, Salary, Dno
+FROM Employee;
+
+
+-- 3. Display each employee’s full name and their annual commission (10% of annual 
+salary) as ANNUAL_COMM. 
+
+SELECT 
+    Fname + ' ' + Lname AS Full_Name,
+    (Salary * 12) * 0.10 AS ANNUAL_COMM
+FROM Employee;
+
+
+-- 4. Display employee ID and name for employees earning more than 1000 LE monthly. 
+SELECT  SSN, Fname + ' ' + Lname AS Full_Name
+FROM Employee
+where Salary>1000;
+
+
+-- 5. Display employee ID and name for employees earning more than 10000 LE annually. 
+SELECT  SSN, Fname + ' ' + Lname AS Full_Name
+FROM Employee
+where (Salary *12)>10000;
+
+-- 6. Display names and salaries of all female employees. 
+SELECT Fname, Salary
+FROM Employee
+where Sex='F';
+
+-- 7. Display employees whose salary is between 2000 and 5000. 
+SELECT Fname, Salary
+FROM Employee
+where Salary between 2000 and 5000
+
+--8. Display employee names ordered by salary descending.
+SELECT Fname, Salary
+FROM Employee
+order by Salary desc
+
+--9. Display the maximum, minimum, and average salary. 
+SELECT 
+    MAX(Salary) AS Max_Salary,
+    MIN(Salary) AS Min_Salary,
+    AVG(Salary) AS Avg_Salary
+FROM Employee;
+
+-- 10. Display the total number of employees. 
+SELECT COUNT(*) AS Total_Employees
+FROM Employee;
+
+-- 11. Display employees whose first name starts with 'A'. 
+select *
+from employee
+where fname like 'a%'
+
+-- 12. Display employees who have no supervisor. 
+select *
+from employee
+where Superssn is null
+
+-- 13. Display employees hired after 2020. 
+select *
+from employee
+WHERE HiringDate > '2020-12-31';
+
+-- DML 
+-- 14. Insert your personal data into the employee table (Department = 30, SSN = 102672, Superssn = 112233, Salary = 3000). 
+
+insert into employee (Dno, SSN, Superssn, Salary)
+values (30, 102672, 112233,  3000)
+select * from Employee
+
+-- 15. Insert another employee (your friend) in department 30 with SSN = 102660, leaving salary and supervisor number NULL. 
+insert into employee (Fname, Lname,SSN, Superssn, Salary, Dno)
+values ('anoud','mohammed', 102672, null, null,30 )
+select * from Employee
+UPDATE Employee
+SET Superssn = NULL
+WHERE SSN = 102660;
+
+-- 16. Update your salary by 20%. 
+UPDATE Employee
+SET Salary = Salary * 1.20
+WHERE SSN = 102672;
+select * from Employee
+
+ALTER TABLE Employee
+DROP CONSTRAINT CK_Employee_Salary;
+
+ALTER TABLE Employee
+ADD CONSTRAINT CK_Employee_Salary
+
+--17. Increase salaries by 5% for all employees in department 30. 
+UPDATE Employee
+SET Salary = Salary + (Salary * 0.05)
+WHERE Dno = 30;
+select * from Employee
+
+-- 18. Set commission to NULL for employees earning less than 2000.
+UPDATE Employee
+SET Commission = NULL
+WHERE Salary < 2000;

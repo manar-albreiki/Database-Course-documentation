@@ -1,0 +1,100 @@
+CREATE DATABASE companytask
+use companytask
+GO
+CREATE TABLE EMPs(
+	Fname nvarchar(20) not null,
+	Lname nvarchar(20) not null,
+	SSN int primary key identity(1,1 ),
+	Bdate date,
+	Gender bit default 0,
+	Super_ssn int,
+	foreign key (Super_ssn) references EMPs(SSN)
+)
+
+CREATE TABLE DEPTs(
+Dnum INT PRIMARY KEY identity (1,1),
+Dname VARCHAR(30) NOT NULL,
+Mgr_SSN int,
+Hiringdate DATE,
+foreign key (Mgr_SSN) references EMPs(SSN),
+)
+
+CREATE TABLE LOCATIONs(
+Dnum int,
+DLocations VARCHAR(30) NOT NULL,
+foreign key (Dnum) references DEPTs(Dnum),
+primary key (Dnum, DLocations),
+)
+
+CREATE TABLE PROJECTs(
+Pnumber int primary key identity (1,1),
+Pname VARCHAR(30) NOT NULL,
+Pcity VARCHAR(30) NOT NULL,
+PLocation VARCHAR(30) NOT NULL,
+Dnum int,
+foreign key (Dnum) references DEPTs(Dnum)
+)
+
+CREATE TABLE EMPs_Work(
+SSN int,
+Pnumber int,
+WorkingHours int,
+foreign key (SSN) references EMPs(SSN),
+foreign key (Pnumber) references PROJECTs(Pnumber),
+primary key (SSN, Pnumber)
+)
+
+CREATE TABLE DEPENDENTs(
+DependentsName VARCHAR(50) NOT NULL,
+Dependentsgender BIT DEFAULT 0,
+DependentsDOB DATE,
+SSN int,
+foreign key (SSN) references EMPs(SSN),
+primary key (SSN, DependentsName)
+)
+alter table EMPs
+	add Dnumber int foreign key references DEPTs(Dnum) --- to add
+
+Insert into EMPs(Fname,Lname,Bdate,Gender,Super_ssn) 
+values('manar','mohammed','2003-02-16',0,1),
+('shima','mohammed','2002-07-19',0,2),
+('Omar','Nasser','1992-03-15',1,3),
+('Fatma','Salim','1998-12-02',0,4);
+select * from EMPs
+
+Insert into DEPTs(Dname,Mgr_SSN,Hiringdate)
+values('IT',1,'2020-01-15'),        
+('HR',2,'2019-05-10'),      
+('Finance',3,'2021-03-20');
+select * from DEPTs
+
+INSERT INTO LOCATIONs (Dnum, DLocations)
+VALUES(1, 'Muscat'),
+(2, 'Salalah'),
+(1, 'Sohar'),
+(3, 'Nizwa'),
+(2, 'Sur');
+select * from LOCATIONs
+
+INSERT INTO PROJECTs(Pname,Pcity,PLocation,Dnum)
+VALUES('Smart Parking System', 'Muscat', 'Muscat Downtown', 1),
+('HR Management App', 'Salalah', 'Salalah Business Center', 2),
+('Finance Automation', 'Sohar', 'Sohar Industrial Zone', 3),
+('Network Upgrade', 'Nizwa', 'Nizwa Tech Park', 1),
+('EV Charging System', 'Sur', 'Sur City Center', 2);
+select * from PROJECTs
+
+INSERT INTO EMPs_Work (SSN, Pnumber, WorkingHours)
+VALUES (1, 2, 40),
+(2, 3, 35),
+(3, 1, 30),
+(4, 2, 25);
+select * from EMPs_Work
+
+INSERT INTO DEPENDENTs(DependentsName,Dependentsgender,DependentsDOB)
+VALUES('Anoud',0, '2010-05-12'),
+('Said',1, '2012-09-03'),
+('Sara',0, '2015-11-20'),
+('Hassan',1, '2008-01-30');
+select * from DEPENDENTs
+

@@ -1,9 +1,8 @@
-CREATE DATABASE CompanyDB
-use CompanyDB
-GO
+CREATE DATABASE companytask
+use companytask
+
 CREATE TABLE EMPs(
 	Fname nvarchar(20) not null,
-	Mname nvarchar(20),
 	Lname nvarchar(20) not null,
 	SSN int primary key identity(1,1 ),
 	Bdate date,
@@ -11,42 +10,50 @@ CREATE TABLE EMPs(
 	Super_ssn int,
 	foreign key (Super_ssn) references EMPs(SSN)
 )
+
 CREATE TABLE DEPTs(
 Dnum INT PRIMARY KEY identity (1,1),
 Dname VARCHAR(30) NOT NULL,
 Mgr_SSN int,
-foreign key (Mgr_SSN) references EMPs(SSN),
 Hiringdate DATE,
+foreign key (Mgr_SSN) references EMPs(SSN),
 )
+
 CREATE TABLE LOCATIONs(
 Dnum int,
 DLocations VARCHAR(30) NOT NULL,
 foreign key (Dnum) references DEPTs(Dnum),
 primary key (Dnum, DLocations),
 )
+
 CREATE TABLE PROJECTs(
 Pnumber int primary key identity (1,1),
 Pname VARCHAR(30) NOT NULL,
 Pcity VARCHAR(30) NOT NULL,
 PLocation VARCHAR(30) NOT NULL,
 Dnum int,
-foreign key (Dnum) references DEPTs(Dnum),
+foreign key (Dnum) references DEPTs(Dnum)
 )
+
+CREATE TABLE EMPs_Work(
+SSN int,
+Pnumber int,
+WorkingHours int,
+foreign key (SSN) references EMPs(SSN),
+foreign key (Pnumber) references PROJECTs(Pnumber),
+primary key (SSN, Pnumber)
+)
+
 CREATE TABLE DEPENDENTs(
 DependentsName VARCHAR(50) NOT NULL,
 Dependentsgender BIT DEFAULT 0,
 DependentsDOB DATE,
 SSN int,
 foreign key (SSN) references EMPs(SSN),
+primary key (SSN, DependentsName)
 )
-CREATE TABLE EMPs_Work(
-SSN int,
-Pnumber int,
-foreign key (SSN) references EMPs(SSN),
-foreign key (Pnumber) references PROJECTs(Pnumber),
-primary key (SSN, Pnumber),
-WorkingHours int,
-)
+alter table EMPs
+	add Dnumber int foreign key references DEPTs(Dnum)
 
 Insert into EMPs(Fname,Lname,Bdate,Gender,Super_ssn) 
 values('manar','mohammed','2003-02-16',0,1),
