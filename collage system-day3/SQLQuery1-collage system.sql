@@ -1,0 +1,314 @@
+create database collage
+use collage
+create table student (
+S_ID int primary key identity(1,1 ),
+Fname nvarchar(20) not null,
+Lname nvarchar(20) not null,
+Phone_no varchar (20),
+DOB date
+)
+create table Dept (
+Dept_ID int primary key identity(1,1 ),
+Dept_name nvarchar(60) not null,
+)
+alter table student
+	add Dept_ID int foreign key references Dept(Dept_ID)
+
+create table Faculty (
+F_ID int primary key identity(1,1 ),
+Faculty_name nvarchar(50) not null,
+Faculty_PhoneNo varchar(20),
+Faculty_Department nvarchar(50) not null,
+Faculty_salary decimal (9,9),
+Dept_ID int,
+foreign key (Dept_ID) references Dept(Dept_ID)
+)
+create table Hostel (
+Hostel_id int primary key identity(1,1 ),
+Hostel_name nvarchar(50) not null,
+City nvarchar(50),
+H_State nvarchar(50),
+H_adress nvarchar(50),
+Pin_code int, 
+No_ofSeats int,
+)
+alter table student
+	add Hostel_id int foreign key references Hostel(Hostel_id)
+
+create table Subjects (
+Subjects_id int primary key identity(1,1 ),
+Subjects_name nvarchar(60) not null,
+F_ID int,
+foreign key (F_ID) references Faculty(F_ID)
+)
+
+create table exams (
+exam_code int primary key identity(1,1 ),
+exam_date date,
+exam_time time,
+exam_room VARCHAR,
+F_ID int,
+foreign key (F_ID) references Faculty(F_ID)
+)
+
+create table course (
+course_ID int primary key identity(1,1 ),
+course_name nvarchar(60),
+course_duration VARCHAR,
+Dept_ID int,
+foreign key (Dept_ID) references Dept(Dept_ID)
+)
+CREATE TABLE Student_Course (
+S_ID int, 
+course_ID int, 
+FOREIGN KEY (S_ID) REFERENCES student(S_ID),
+FOREIGN KEY (course_ID) REFERENCES course(course_ID),
+primary key (S_ID, course_ID)
+)
+
+alter table exams
+drop constraint PK__exams__45DD589B35626944
+
+
+ALTER TABLE exams
+drop column exam_code 
+
+ALTER TABLE exams
+ADD exam_code VARCHAR(20) PRIMARY KEY;
+
+CREATE TABLE Student_Exam (
+    S_id INT NOT NULL,
+    Exam_code VARCHAR(20) NOT NULL,
+  FOREIGN KEY (S_id) REFERENCES student(S_ID),
+FOREIGN KEY (Exam_code) REFERENCES exams(Exam_code),
+  primary key (Exam_code, S_id)
+)
+CREATE TABLE Student_Subject (
+    S_id INT NOT NULL,
+	Subjects_id int
+    FOREIGN KEY (S_ID) REFERENCES student(S_ID),
+    FOREIGN KEY (Subjects_id) REFERENCES Subjects(Subjects_id),
+	 primary key (Subjects_id, S_ID)
+)
+
+create table student_faculty(
+S_ID int not null,
+F_ID int not null,
+ FOREIGN KEY (S_ID) REFERENCES student(S_ID),
+ FOREIGN KEY (F_ID) REFERENCES Faculty(F_ID),
+ primary key (F_ID, S_ID)
+ )
+
+ INSERT INTO student (Fname, Lname, Phone_no, DOB)
+VALUES 
+('Ahmed', 'Al-Harthy', '91234567', '2000-05-12'),
+('Mona', 'Saeed', '99887766', '1999-11-23'),
+('Omar', 'Al-Farsi', '90011223', '2001-02-05');
+
+select * from student
+
+INSERT INTO Dept (Dept_name)
+VALUES 
+('Telecommunications'),
+('Computer Engineering'),
+('Electrical Engineering'),
+('Mechanical Engineering');
+select * from Dept
+
+ALTER TABLE Faculty
+ALTER COLUMN Faculty_salary DECIMAL(10,2)
+
+INSERT INTO Faculty (Faculty_name, Faculty_PhoneNo, Faculty_Department, Faculty_salary, Dept_ID)
+VALUES
+('Dr. Ahmed Al-Harthy', '91234567', 'Telecommunications', 1200.50, 1),
+('Dr. Mona Saeed', '99887766', 'Computer Engineering', 1500.00, 2),
+('Dr. Omar Al-Farsi', '90011223', 'Electrical Engineering', 1300.75, 3);
+
+select * from Faculty
+
+INSERT INTO Hostel (Hostel_name, City, H_State, H_adress, Pin_code, No_ofSeats)
+VALUES
+('Al-Saada Hostel', 'Muscat', 'Muscat', 'Street 1', 112233, 100),
+('Al-Noor Hostel', 'Salalah', 'Dhofar', 'Street 5', 445566, 80),
+('Al-Huda Hostel', 'Nizwa', 'Ad Dakhiliyah', 'Street 3', 778899, 120);
+
+select * from Hostel
+
+INSERT INTO Subjects (Subjects_name, F_ID)
+VALUES
+('Telecommunications Systems', 3),
+('Computer Networks', 4),
+('Digital Electronics', 3),
+('Programming Fundamentals', 2);
+
+select * from Subjects
+
+ALTER TABLE exams
+ALTER COLUMN exam_room VARCHAR(50);
+
+
+INSERT INTO exams (exam_code, exam_date, exam_time, exam_room, F_ID)
+VALUES
+('EX001', '2026-01-10', '09:00', 'Room 101', 4),
+('EX002', '2026-01-12', '13:00', 'Room 102', 2),
+('EX003', '2026-01-15', '10:30', 'Room 103', 3),
+('EX004', '2026-01-18', '11:00', 'Room 104', 2);
+
+select * from exams
+
+ALTER TABLE course
+ALTER COLUMN course_duration VARCHAR(20);
+
+INSERT INTO course (course_name, course_duration, Dept_ID)
+VALUES
+('Telecommunications Engineering', '4 Years', 1),
+('Computer Engineering', '4 Years', 2),
+('Electrical Engineering', '4 Years', 3),
+('Mechanical Engineering', '4 Years', 4);
+
+select * from course
+
+INSERT INTO Student_Course (S_ID, course_ID)
+VALUES
+(1, 5),
+(1, 2),
+(2, 3),
+(3, 3),
+(3, 4),
+(2, 2);
+
+select * from Student_Course
+
+INSERT INTO Student_Exam (S_id, Exam_code)
+VALUES
+(1, 'EX001'),
+(1, 'EX002'),
+(2, 'EX001'),
+(2, 'EX002'),
+(3, 'EX003'),
+(3, 'EX004');
+
+select * from Student_Exam
+
+INSERT INTO Student_Subject (S_id, Subjects_id)
+VALUES
+(1, 2),
+(3, 2),
+(2, 5),
+(2, 4),
+(3, 3),
+(3, 4);
+
+select * from Student_Subject
+
+INSERT INTO student_faculty (S_ID, F_ID)
+VALUES
+(1, 4),
+(1, 2),
+(2, 4),
+(2, 2),
+(3, 3),
+(3, 2);
+
+select * from student_faculty
+
+-----------------------------------------------------------------------------------------------------
+--DQL
+--1. Display all student records.
+select * from student
+
+--2. Display each student's full name, 
+SELECT 
+    Fname + ' ' + Lname AS Full_Name
+	from student
+	--4. Display each student’s full name and GPA as GPA Score
+	alter table student
+	add  GPA decimal
+
+	alter table student
+	alter column GPA decimal(3,2)
+
+	select * from student
+	UPDATE student
+SET GPA = 3.85
+WHERE S_ID = 1;
+
+UPDATE student
+SET GPA = 3.40
+WHERE S_ID = 2;
+
+UPDATE student
+SET GPA = 2.95
+WHERE S_ID = 3;
+
+
+SELECT 
+    Fname + ' ' + Lname AS Full_Name,
+    GPA AS GPA_Score
+FROM student;
+
+--5. List student IDs and names of students with GPA greater than 3.5.
+select
+S_ID, Fname + ' ' + Lname AS Full_Name, GPA
+ from student
+   where GPA > 3.5;
+
+   -- 7. Display students with GPA between 3.0 and 3.5
+   select
+S_ID, Fname + ' ' + Lname AS Full_Name, GPA
+ from student
+WHERE GPA BETWEEN 3.0 AND 3.5;
+
+-- 8. Display students ordered by GPA descending.
+select * from student
+
+order by GPA desc
+
+--9. Display the maximum, minimum, and average GPA. 
+select 
+MAX (GPA) AS MAX_GPA,
+MIN (GPA) AS MIN_GPA,
+AVG  (GPA) AS AVG_GPA
+from student
+
+-- 10. Display total number of students. 
+SELECT COUNT(*) AS Total_Students
+FROM student;
+
+-- 11. Display students whose names end with 'a'. 
+SELECT * FROM student
+WHERE Fname like '%a'
+
+-------------------------------------------------
+--DML 
+-- 14. Insert your data as a new student (Student ID = 300045, Program ID = 2, GPA = 3.6). 
+-- add the Fname and Lname because it is not null(above)
+
+SET IDENTITY_INSERT student ON; --remove the identity from S_ID
+
+
+ INSERT INTO student (S_ID, Fname, Lname, Phone_no, DOB, GPA)
+VALUES (300045, 'Manar', 'Mohd', '91234567', '2002-06-15', 3.6);
+
+select * from student
+SET IDENTITY_INSERT student OFF;
+-- 15. Insert another student (your friend) with GPA and advisor set to NULL. 
+
+ALTER TABLE student
+ADD advisor  VARCHAR(20)
+
+UPDATE student
+SET advisor = 'ali'
+WHERE S_ID = 1;
+
+UPDATE student
+SET advisor = 'ahmed'
+WHERE S_ID = 2;
+
+UPDATE student
+SET advisor = 'hamad'
+WHERE S_ID = 3;
+
+ UPDATE student
+SET advisor = 'omar'
+WHERE S_ID = 300045;
