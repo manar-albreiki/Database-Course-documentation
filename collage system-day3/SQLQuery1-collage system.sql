@@ -312,3 +312,43 @@ WHERE S_ID = 3;
  UPDATE student
 SET advisor = 'omar'
 WHERE S_ID = 300045;
+
+SET IDENTITY_INSERT student ON; 
+
+ INSERT INTO student (S_ID, Fname, Lname, Phone_no, DOB, GPA )
+VALUES (399, 'shima', 'Mohd', '99119234', '1999-06-15', 3.9);
+
+select * from student
+
+SET IDENTITY_INSERT student OFF;
+
+-- 16. Increase your GPA by 0.2.
+UPDATE student
+SET GPA = GPA + 0.2
+WHERE S_ID = 300045;
+
+update student 
+set GPA = GPA + 0.2
+WHERE S_ID = 1;
+
+UPDATE student
+SET GPA = GPA + 0.2
+WHERE S_ID = 2; 
+
+UPDATE student
+SET GPA = GPA + 0.2
+WHERE S_ID = 3;
+
+UPDATE student
+SET GPA = GPA + 0.2
+WHERE S_ID = 399;
+
+select * from student
+
+-- 17. Set GPA to 2.0 for students with GPA below 2.0
+UPDATE student
+SET GPA = 2.0
+WHERE GPA < 2.0;
+
+select * from student
+
