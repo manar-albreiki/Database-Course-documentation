@@ -1,0 +1,317 @@
+create database librarySystem
+use librarySystem 
+
+create table library1(
+library_ID int primary key identity(1,1),
+library_name varchar (30) not null,
+library_location nvarchar (50) not null, 
+library_PhoneNumber nvarchar (20) not null,
+library_establishedYear int
+)
+ALTER TABLE library1
+ADD CONSTRAINT UQ_Library_Name UNIQUE (library_name);
+
+
+create table Members(
+Members_ID int primary key identity(1,1),
+Members_FullName nvarchar (50),
+Members_email nvarchar (70) UNIQUE not null,
+Members_PhoneNumber nvarchar (30),
+membership_StartDate date not null
+)
+
+create table Book(
+Book_ID int primary key identity(1,1),
+Book_ISBN NVARCHAR(20) UNIQUE  NOT NULL,
+Book_title NVARCHAR(100)  NOT NULL,
+Book_price decimal (8,2) CHECK (Book_Price > 0),
+Book_IsAvailable BIT DEFAULT 1,
+Book_Genre VARCHAR(20) CHECK (Book_Genre IN ('Fiction', 'Non-fiction', 'Reference', 'Children')) NOT NULL,
+Shelf_Location VARCHAR(10) NOT NULL,
+library_ID int,
+foreign key (library_ID) references library1(library_ID)
+)
+ALTER TABLE Book
+DROP CONSTRAINT FK__Book__library_ID__2E1BDC42;
+
+ALTER TABLE Book
+ADD CONSTRAINT FK_Book_Library 
+FOREIGN KEY (library_ID) REFERENCES library1(library_ID)
+ON DELETE CASCADE
+ON UPDATE CASCADE;
+
+
+create table Staff(
+staff_ID int primary key identity(1,1),
+staff_FullName nvarchar (50),
+staff_position nvarchar (50),
+staff_PhoneNumber nvarchar (30),
+library_ID int,
+CONSTRAINT FK_STAFF_Library 
+foreign key (library_ID) references library1(library_ID)
+ON DELETE CASCADE
+ON UPDATE CASCADE
+)
+
+create table review(
+review_id int primary key identity(1,1),
+review_rate int check (review_rate between 1 and 5) not null,
+review_comments nvarchar (150) DEFAULT 'No comments',
+review_date date not null,
+Book_ID int,
+constraint FK_review_Book
+foreign key (Book_ID) references Book(Book_ID)
+ON DELETE CASCADE
+ON UPDATE CASCADE, 
+Members_ID int,
+CONSTRAINT FK_review_Members
+foreign key (Members_ID) references Members(Members_ID)
+ON DELETE CASCADE
+ON UPDATE CASCADE
+)
+create table loan(
+loan_id int primary key identity(1,1),
+loan_date date  NOT NULL,
+ due_date date  NOT NULL,
+ return_date date,
+CHECK (Return_Date IS NULL OR Return_Date >= Loan_Date),
+Loan_Status NVARCHAR(20) DEFAULT 'Issued' NOT NULL,
+     CHECK (Loan_Status IN ('Issued', 'Returned', 'Overdue')),
+    
+Book_ID int,
+constraint FK_loan_Book
+foreign key (Book_ID) references Book(Book_ID)
+ON DELETE CASCADE
+ON UPDATE CASCADE, 
+
+Members_ID int,
+CONSTRAINT FK_loan_Members
+foreign key (Members_ID) references Members(Members_ID)
+ON DELETE CASCADE
+ON UPDATE CASCADE
+)
+
+create table payment(
+payment_id int primary key identity(1,1),
+ payment_date DATE NOT NULL,
+ amount DECIMAL (8,3) NOT NULL CHECK (amount > 0),
+ method VARCHAR (50),
+loan_id int,
+CONSTRAINT FK_Payment_loan
+foreign key (loan_id) references loan(loan_id)
+ON DELETE CASCADE
+ON UPDATE CASCADE
+)
+--------------------------------------------
+INSERT INTO library1 (library_name, library_location, library_PhoneNumber, library_establishedYear)
+VALUES ('Central Library', 'Muscat', '24567890', 1995),
+('City Library', 'Salalah', '24567891', 2001),
+('Knowledge Hub', 'Sohar', '24567892', 2010),
+('Children Library', 'Nizwa', '24567893', 2015);
+
+select * from library1
+
+INSERT INTO Members (Members_FullName, Members_email, Members_PhoneNumber, membership_StartDate)
+VALUES
+('Ali Al-Harthy', 'ali@example.com', '91123456', '2023-01-15'),
+('Sara Al-Mahri', 'sara@example.com', '91234567', '2022-08-10'),
+('Omar Al-Kindi', 'omar@example.com', '91345678', '2024-03-05'),
+('Fatma Al-Balushi', 'fatma@example.com', '91456789', '2023-11-20');
+
+select * from Members
+
+
+INSERT INTO Book (Book_ISBN, Book_title, Book_price, Book_IsAvailable, Book_Genre, Shelf_Location, library_ID)
+VALUES('978-0131103627', 'The C Programming Language', 55.00, 1, 'Reference', 'A1', 1),
+('978-0439023528', 'The Hunger Games', 20.50, 1, 'Fiction', 'B3', 1),
+('978-0590353427', 'Harry Potter and the Sorcerer''s Stone', 25.00, 1, 'Children', 'C2', 2),
+('978-0062316097', 'Sapiens: A Brief History of Humankind', 30.00, 1, 'Non-fiction', 'D5', 2),
+('978-0316769488', 'The Catcher in the Rye', 18.00, 1, 'Fiction', 'A4', 1);
+
+select * from Book
+
+INSERT INTO Staff (staff_FullName, staff_position, staff_PhoneNumber, library_ID)
+VALUES
+('Layla Al-Hinai', 'Head Librarian', '91220001', 1),
+('Nasser Al-Balushi', 'Assistant Librarian', '91220002', 1),
+('Mariam Al-Salmi', 'Archivist', '91220003', 2),
+('Khalid Al-Maawali', 'Library Technician', '91220004', 2),
+('Aisha Al-Riyami', 'Security', '91220005', 1);
+
+select * from Staff
+
+INSERT INTO Review (review_rate, review_comments, review_date, Book_ID, Members_ID)
+VALUES
+(5, 'Excellent book, very informative.', '2025-01-10', 1, 1),
+(4, 'Enjoyed reading it.', '2025-02-15', 2, 2),
+(3, 'It was okay, some parts were boring.', '2025-03-20', 3, 3),
+(5, 'A must-read for everyone!', '2025-04-05', 4, 4),
+(2, DEFAULT, '2025-05-12', 5, 1);  -- Using DEFAULT for review_comments
+
+select * from Review
+
+INSERT INTO Loan (loan_date, due_date, return_date, Loan_Status, Book_ID, Members_ID)
+VALUES
+('2025-12-01', '2025-12-15', NULL, DEFAULT, 1, 1),  -- Not returned yet
+('2025-11-20', '2025-12-04', '2025-12-03', 'Returned', 2, 2),
+('2025-12-05', '2025-12-19', NULL, DEFAULT, 3, 3),  -- Not returned yet
+('2025-11-28', '2025-12-12', '2025-12-13', 'Overdue', 4, 4),
+('2025-12-10', '2025-12-24', NULL, DEFAULT, 5, 1),  -- Not returned yet
+('2025-12-15', '2025-12-29', NULL, 'Issued', 2, 3); -- note for me / no need to write (Issued) becuse (DEFAULT) mean (Issued)
+
+select * from Loan
+
+INSERT INTO Payment (payment_date, amount, method, loan_id)
+VALUES('2025-12-05', 25.500, 'Cash', 1),
+('2025-12-06', 18.750, 'Credit Card', 2),
+('2025-12-07', 30.000, 'Debit Card', 3),
+('2025-12-08', 20.000, 'Online Transfer', 4),
+('2025-12-09', 15.250, 'Cash', 5),
+('2025-12-10', 22.500, 'Credit Card', 6);
+
+select * from Payment
+--------------------------
+-- DQL 
+-- 1. Display all book records. 
+SELECT * FROM Book
+
+-- 2. Display each book’s title, genre, and availability. 
+select 
+Book_title, Book_Genre, Book_IsAvailable
+from Book
+
+-- 3. Display all member names, email, and membership start date. 
+select 
+Members_FullName, Members_email, membership_StartDate
+from Members
+
+-- 4. Display each book’s title and price as BookPrice. 
+select 
+Book_title,
+Book_price as BookPrice
+from Book
+
+-- 5. List books priced above 250 LE. (my data in OMR)
+select * from Book
+where Book_price > 25
+
+
+-- 6. List members who joined before 2023. 
+select * from Members
+where membership_StartDate < '2023';
+
+-- 7. Display books published after 2018. 
+alter table Book
+add published_year int
+
+update Book
+set published_year = 2020
+where Book_ID = 1;
+
+update Book
+set published_year = 2021
+where Book_ID = 2;
+
+update Book
+set published_year = 2019
+where Book_ID = 3;
+
+update Book
+set published_year = 2025
+where Book_ID = 4;
+
+update Book
+set published_year = 2015
+where Book_ID = 5;
+
+select * from Book
+
+select * from Book
+where published_year > '2018';
+
+-- 8. Display books ordered by price descending. 
+select * from Book
+order by Book_price desc
+
+-- 9. Display the maximum, minimum, and average book price.
+select 
+max(Book_price) as maxPrice,
+min(Book_price) as minPrice,
+avg(Book_price) as avgPrice
+from Book
+
+-- 10. Display total number of books.
+SELECT COUNT(*) AS Total_Books
+FROM Book;
+
+-- 11. Display members with NULL email. 
+SELECT * FROM Members
+WHERE Members_email IS NULL;
+
+-- 12. Display books whose title contains 'Data'. 
+SELECT * FROM Book
+WHERE Book_title LIKE '%Data%';
+
+-- DML 
+-- 13. Insert yourself as a member (Member ID = 405). 
+SET IDENTITY_INSERT Members ON;
+
+INSERT INTO Members (Members_ID, Members_FullName, Members_email, Members_PhoneNumber, membership_StartDate)
+VALUES (405, 'Manar Mohd', 'manar.mohd@email.com', '96891234567', '2024-12-01');
+
+SET IDENTITY_INSERT Members OFF;
+
+select * from Members
+
+-- 14. Register yourself to borrow book ID 1011. 
+SET IDENTITY_INSERT Book ON;
+
+INSERT INTO Book 
+(Book_ID, Book_ISBN, Book_title, Book_price, Book_IsAvailable, Book_Genre, Shelf_Location, library_ID)
+VALUES 
+(1011,'978-1234567890', 'Data Structures and Algorithms', 45.500, 1, 'Reference', 'A1-05', 1);
+
+SET IDENTITY_INSERT Book OFF;
+select * from Book
+
+--15. Insert another member with NULL email and phone. 
+alter table Members
+alter column Members_email nvarchar (70)  null
+
+INSERT INTO Members (Members_FullName, Members_email, Members_PhoneNumber, membership_StartDate)
+VALUES ('Ali Ahmed', NULL, NULL, '2024-12-17');
+
+select * from Members
+
+-- 16. Update the return date of your loan to today. 
+UPDATE loan
+SET return_date = GETDATE()
+WHERE Members_ID = 405
+  AND return_date IS NULL;
+
+  select * from loan
+
+  -- 17. Increase book prices by 5% for books priced under 200. 
+  update Book
+SET Book_price = Book_price * 1.05
+WHERE Book_price < 20;
+
+select * from Book
+--18. Update member status to 'Active' for recently joined members. 
+alter table Members
+add  membership_Status varchar(20)
+
+UPDATE Members
+SET membership_Status = 'Active'
+WHERE membership_StartDate >= '2024';
+
+select * from Members
+
+--19. Delete members who never borrowed a book. 
+DELETE FROM Members
+WHERE NOT EXISTS (
+    SELECT 1
+    FROM Loan
+    WHERE Loan.Members_ID = Members.Members_ID
+);
+select * from Members

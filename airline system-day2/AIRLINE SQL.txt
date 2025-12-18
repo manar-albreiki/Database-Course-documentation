@@ -147,3 +147,125 @@ VALUES
     (51, 500.000, 'FL104');
 select * from fare
 
+--------------------------------------------------------
+--DQL
+-- 1. Display all flight leg records. 
+
+select * from fligth_leg
+
+-- 2. Display each flight leg ID, scheduled departure time, and arrival time. 
+SELECT
+leg_no AS Flight_Leg_ID, 
+departure_time, 
+arrival_time
+FROM Leg_instance;
+
+-- 3. Display each airplane’s ID, type, and seat capacity. 
+SELECT
+Airplane_id,
+typesAirplain,
+total_seats as seat_capacity
+from Airplane
+
+-- 4. Display each flight leg’s ID and available seats as AvailableSeats.
+SELECT leg_no AS Flight_Leg_ID,
+available_seats AS AvailableSeats
+FROM Leg_instance;
+
+-- 5. List flight leg IDs with available seats greater than 100. 
+SELECT leg_no AS Flight_Leg_ID, available_seats
+FROM Leg_instance
+WHERE available_seats > 100;
+
+--6. List airplane IDs with seat capacity above 300. 
+select
+Airplane_id, total_seats
+from Airplane
+where total_seats > 300;
+
+-- 7. Display airport codes and names where city = 'Cairo'. 
+select
+airport_code
+from airport
+where airport_name like '%Cairo%'
+
+-- 8. Display flight legs scheduled on 2025-06-10. 
+SELECT leg_no AS Flight_Leg_ID, arrival_time, departure_time, available_seats
+FROM Leg_instance
+WHERE Leg_instance_date = '2025-06-10';
+
+-- 9. Display flight legs ordered by departure time. 
+select
+leg_no as flight_legs, departure_time
+FROM Leg_instance
+order by departure_time desc
+
+-- 10. Display the maximum, minimum, and average available seats. 
+select 
+max (available_seats) as maxseats,
+min (available_seats) as minseats,
+avg (available_seats) as avgseats
+from Leg_instance
+
+-- 11. Display total number of flight legs. 
+select count (*) as Noflight_legs
+from Leg_instance
+
+-- 12. Display airplanes whose type contains 'Boeing'. 
+select 
+typesAirplain 
+from Airplane
+where typesAirplain like '%Boeing%'
+
+-- DML 
+-- 13. Insert a new flight leg departing from 'CAI' to 'DXB' on 2025-06-10. 
+INSERT INTO airport (airport_code)
+SELECT 'DXB'
+WHERE NOT EXISTS (
+    SELECT 1 FROM airport WHERE airport_code = 'DXB'
+);
+
+INSERT INTO fligth (flight_no)
+VALUES ('FL106'), ('FL107');
+
+INSERT INTO fligth_leg (airport_code, flight_no)
+VALUES
+    ('CAI', 'FL106'),
+    ('DXB', 'FL107');
+
+	select * from fligth
+
+
+	select * from fligth_leg
+
+	DELETE FROM fligth_leg
+WHERE leg_no IN (12, 13);
+
+	DELETE FROM fligth
+WHERE flight_no IN (FL105);
+
+DELETE FROM fligth
+WHERE flight_no IN ('FL105', 'FL106', 'FL107');
+
+
+
+
+-- 14. Insert a customer with NULL contact number. 
+INSERT INTO customer (customer_id, customer_name, customer_phone)
+VALUES (6, 'Ali Omar', NULL);
+SELECT * FROM customer
+
+-- 15. Reduce available seats of your inserted flight leg by 5. 
+UPDATE Leg_instance
+SET available_seats = available_seats - 5
+
+SELECT * FROM Leg_instance
+
+-- 16. Increase available seats by 10 for all domestic flights. 
+UPDATE Leg_instance
+SET available_seats = available_seats + 10 
+
+-- 17. Update airplane seat capacity by +20 where capacity < 150.
+UPDATE Airplane
+SET total_seats = total_seats + 20
+WHERE total_seats < 150;
