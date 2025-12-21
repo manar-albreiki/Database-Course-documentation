@@ -1,0 +1,123 @@
+use Company_SD
+select * from Departments
+select * from Dependent
+select * from Employee
+select * from Project
+select * from Works_for
+-- 1. Display the department ID, department name, manager ID, and the full name of the manager.
+SELECT 
+   Dnum as department_id,
+   Dname as  department_name,
+      MGRSSN as  manager_id,
+    Fname+ ' ' + Lname AS manager_full_name
+FROM Departments 
+JOIN Employee 
+ON MGRSSN = SSN
+
+-- 2. Display the names of departments and the names of the projects they control. 
+
+SELECT 
+    Dname AS departments_names,
+    Pname AS projects_names
+FROM Departments d
+JOIN Project p
+ON d.Dnum = p.Dnum; -- the common culmon between the both tables
+
+-- 3. Display full data of all dependents, along with the full name of the employee they depend on.
+
+SELECT 
+    d.ESSN,
+    d.Dependent_name,
+    d.Sex,
+    d.Bdate,
+    e.Fname + ' ' + e.Lname AS full_name
+FROM Dependent d full JOIN Employee e -- they mention full data
+ON e.SSN = d.ESSN;
+
+--4. Display the project ID, name, and location of all projects located in Cairo or Alex. 
+select
+Pname,
+Pnumber,
+Plocation,
+City
+FROM Project
+WHERE City IN ('Cairo', 'Alex');
+
+-- 5. Display all project data where the project name starts with the letter 'A'. 
+select
+Pname,
+Pnumber,
+Plocation,
+City
+FROM Project
+where Pname like 'A%'
+
+-- 6. Display the IDs and names of employees in department 30 with a salary between 1000 and 2000 LE. 
+
+SELECT
+    e.SSN,
+    e.Fname + ' ' + e.Lname AS full_name,
+    e.Salary,
+    d.Dnum
+FROM Employee e
+JOIN Departments d
+ON e.Dno = d.Dnum
+WHERE d.Dnum = 30
+  AND e.Salary BETWEEN 1000 AND 2000;
+
+  -- 7. Retrieve the names of employees in department 10 who work ≥ 10 hours/week on the "AL Rabwah" project. 
+SELECT 
+    e.Fname + ' ' + e.Lname AS employee_name, p.Pname, w.Hours -- working in 3 tables because department id on employee table also/it can 4
+FROM Employee e
+JOIN Works_for w
+ON e.SSN = w.ESSn
+
+JOIN Project p
+ON w.Pno = p.Pnumber
+WHERE e.Dno = 10
+  AND p.Pname = 'AL Rabwah'
+  AND w.Hours >= 10;
+
+  -- 8. Find the names of employees who are directly supervised by "Kamel Mohamed". 
+  --self join
+  SELECT 
+    e.Fname + ' ' + e.Lname AS employee_name
+FROM Employee e
+JOIN Employee s
+ON e.Superssn = s.SSN
+WHERE s.Fname = 'Kamel'
+  AND s.Lname = 'Mohamed';
+
+  -- 9. Retrieve the names of employees and the names of the projects they work on, sorted by project name. 
+  select
+      Fname + ' ' + Lname AS employee_name, Pname as  project_name
+	  from Employee 
+	  join Works_for
+	  on SSN = ESSn 
+	  join Project
+	  on Pno = Pnumber
+	  ORDER BY Pname; --sorted by project name
+
+-- 10. For each project located in Cairo, display the project number, controlling department name, manager's last name,address, and birthdate. 
+select 
+p.Pnumber, d.Dname, e.Address, e.Bdate, p.City
+from Project p
+join Departments d 
+on p.Dnum = d.Dnum
+join Employee e
+ON d.MGRSSN = e.SSN
+where City = 'Cairo'
+
+-- 12. Display all employees and their dependents, even if some employees have no dependents. 
+SELECT 
+  
+    e.Fname + ' ' + e.Lname AS employee_name,
+    d.Dependent_name
+FROM Employee e
+LEFT JOIN Dependent d
+ON e.SSN = d.ESSN;
+
+
+
+
+
