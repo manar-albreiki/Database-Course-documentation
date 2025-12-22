@@ -1,0 +1,116 @@
+use airline
+select  * from airport
+select  * from Leg_instance
+-- 1. Display each flight leg's ID, schedule, and the name of the airplane assigned to it. 
+SELECT 
+    L.leg_no AS Flight_Leg_ID,
+    L.Leg_instance_date AS Schedule_Date,
+    AT.airplaneTypes_name AS airplane_name
+FROM Leg_instance L
+JOIN Airplane A
+    ON L.Airplane_id = A.Airplane_id
+JOIN airplane_types AT
+    ON A.typesAirplain = AT.airplaneTypes_name;
+
+-- 2. Display all flight numbers and the names of the departure and arrival airports. 
+	SELECT 
+    F.flight_no,
+    A.airport_name AS departure_airport,
+    A.airport_name AS arrival_airport
+FROM fligth F
+JOIN fligth_leg FL
+    ON F.flight_no = FL.flight_no
+JOIN airport A
+    ON FL.airport_code = A.airport_code;
+
+-- 3. Display all reservation data with the name and phone of the customer who made each booking. 
+select
+r.reservation_id,r.reservation_date, r.seat_no,c.customer_name,c.customer_phone
+from reservation r
+join customer c
+on r.customer_id = c.customer_id
+
+-- 4. Display IDs and locations of flights departing from 'CAI' or 'DXB'. 
+SELECT 
+    FL.flight_no AS Flight_ID,
+    A.airport_city AS Location,
+	a.airport_code
+FROM fligth_leg FL
+JOIN airport A
+    ON FL.airport_code = A.airport_code
+WHERE A.airport_code IN ('CAI', 'DXB')
+
+--5. Display full data of flights whose names start with 'A'.
+SELECT * FROM fligth
+WHERE Airline_type LIKE 'Q%' -- i do not have name start with A
+
+-- 6. List customers who have bookings with total payment between 3000 and 5000. 
+SELECT 
+    C.customer_name,
+    F.amount AS Payment
+FROM customer C
+JOIN reservation R
+    ON C.customer_id = R.customer_id
+JOIN Leg_instance L
+    ON R.reservation_date = L.Leg_instance_date
+JOIN fligth_leg FL
+    ON L.leg_no = FL.leg_no
+JOIN fare F
+    ON FL.flight_no = F.flight_no
+WHERE F.amount BETWEEN 300 AND 500;
+
+--7. Retrieve all passengers on 'Flight 110' who booked more than 2 seats. 
+
+
+-- 8. Find names of passengers whose booking was handled by agent "Youssef Hamed". 
+SELECT C.customer_name
+FROM reservation R
+JOIN customer C
+    ON R.customer_id = C.customer_id
+WHERE C.customer_name = 'Ahmed Ali' -- i do not have "Youssef Hamed" so i replace it
+
+-- 9. Display each passenger’s name and the flights they booked, ordered by flight date. 
+
+-- 10. For each flight departing from 'Cairo', display the flight number, departure time, and airline name. 
+SELECT
+FL.leg_no,
+LI.departure_time,
+C.airport_code,
+A.typesAirplain AS airline_name
+from fligth_leg FL
+join Leg_instance LI
+on FL.leg_no = LI.leg_no
+join Airplane A
+on A.Airplane_id = LI.Airplane_id
+join airport C
+ON C.airport_code = FL.airport_code
+WHERE C.airport_code = 'MCT'
+
+-- OR
+SELECT 
+    F.flight_no,
+    L.departure_time,
+    F.Airline_type AS Airline_Name
+FROM fligth_leg FL
+JOIN airport A
+    ON FL.airport_code = A.airport_code
+JOIN fligth F
+    ON FL.flight_no = F.flight_no
+JOIN Leg_instance L
+    ON FL.leg_no = L.leg_no
+WHERE A.airport_city = 'Cairo';
+
+-- 12. Display all bookings and their related passengers, even if some bookings are unpaid. 
+SELECT 
+    R.reservation_id,
+    C.customer_name,
+    F.amount AS Payment
+FROM reservation R
+JOIN customer C
+    ON R.customer_id = C.customer_id
+LEFT JOIN Leg_instance L
+    ON R.reservation_date = L.Leg_instance_date
+LEFT JOIN fligth_leg FL
+    ON L.leg_no = FL.leg_no
+LEFT JOIN fare F
+    ON FL.flight_no = F.flight_no
