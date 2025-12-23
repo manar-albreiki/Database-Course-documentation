@@ -1,0 +1,106 @@
+--DQL
+--1. Display all guest records.
+SELECT * FROM Customer
+
+-- 2. Display each guest’s name, contact number, and proof ID type.
+SELECT 
+customer_name, 
+customer_phone, 
+customer_email AS Proof_ID 
+FROM Customer
+
+-- 3. Display all bookings with booking date, status, and total cost.
+select * from Booking
+SELECT B.booking_ID, B.check_in, B.check_out, 
+       SUM(R.nightly_rate * DATEDIFF(DAY, B.check_in, B.check_out)) AS Total_Cost
+FROM Booking B
+JOIN Room_Booking RB ON B.booking_ID = RB.booking_ID
+JOIN Room R ON RB.room_number = R.room_number
+GROUP BY B.booking_ID, B.check_in, B.check_out
+
+--4. Display each room number and its price per night as NightlyRate. 
+SELECT 
+room_number,
+nightly_rate AS NightlyRate 
+FROM Room
+
+--5. List rooms priced above 1000 per night.
+SELECT * FROM Room
+WHERE nightly_rate > 30 -- do not have 1000
+
+--6. Display staff members working as 'Receptionist'.
+SELECT * FROM Staff
+WHERE staff_job_title = 'Receptionist'
+
+--7. Display bookings made in 2024.
+SELECT * FROM Booking
+WHERE YEAR(check_in) = 2025 -- do not have 2024
+
+-- 8. Display bookings ordered by total cost descending.
+
+-- 9. Display the maximum, minimum, and average room price.
+SELECT MAX(nightly_rate) AS MaxPrice, 
+       MIN(nightly_rate) AS MinPrice, 
+       AVG(nightly_rate) AS AvgPrice
+FROM Room
+
+-- 10. Display total number of rooms.
+SELECT 
+COUNT(*) AS TotalRooms 
+FROM Room
+
+-- 11. Display guests whose names start with 'M'.
+SELECT * FROM Customer
+WHERE customer_name LIKE 'F%' -- DOES nit have M
+
+-- 12. Display rooms priced between 800 and 1500.
+SELECT * FROM Room
+WHERE nightly_rate BETWEEN 20 AND 40
+
+-- DML
+--13. Insert yourself as a guest (Guest ID = 9011).
+SET IDENTITY_INSERT Customer ON;
+
+INSERT INTO Customer (customer_ID, customer_name, customer_phone, customer_email)
+VALUES (9011, 'Manar Mohd', '98765432', 'manar@example.com')
+
+SET IDENTITY_INSERT Customer OFF
+select * from Customer
+
+--14. Create a booking for room 205.
+INSERT INTO Booking (check_in, check_out, customer_ID)
+VALUES ('2025-12-25', '2025-12-30', 9011)
+select * from Booking
+
+-- 15. Insert another guest with NULL contact and proof details.
+INSERT INTO Customer (customer_name, customer_phone, customer_email)
+VALUES ('Noor', NULL, NULL)
+select * from Customer
+
+--16. Update your booking status to 'Confirmed'.
+ALTER TABLE Booking 
+ADD status VARCHAR(20)
+
+UPDATE Booking
+SET status = 'Confirmed'
+WHERE customer_ID = 9011
+
+select * from Booking
+
+-- 17. Increase room prices by 10% for luxury rooms.
+
+select * from Room
+UPDATE Room
+SET nightly_rate = nightly_rate * 1.10
+WHERE room_type = 'Suite'
+
+-- 18. Update booking status to 'Completed' where checkout date is before today.
+UPDATE Booking
+SET status = 'Completed'
+WHERE check_out < GETDATE()
+
+select * from Booking
+
+-- 19. Delete bookings with status 'Cancelled'.
+DELETE FROM Booking
+WHERE status = 'Cancelled';

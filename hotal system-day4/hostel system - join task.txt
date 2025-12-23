@@ -1,0 +1,130 @@
+--JOIN
+-- 1. Display hotel ID, name, and the name of its manager. 
+select * from Staff
+SELECT 
+    B.branch_ID AS Hotel_ID,
+    B.Branch_name AS Hotel_Name,
+    S.staff_name AS Manager_Name
+FROM Branch B
+JOIN Staff S
+    ON B.branch_ID = S.branch_ID
+WHERE S.staff_job_title = 'Manager'
+
+-- 2. Display hotel names and the rooms available under them. 
+SELECT 
+    B.Branch_name AS Hotel_Name,
+    R.room_number AS Room_Number,
+    R.room_type AS Room_Type
+FROM Branch B
+JOIN Room R
+    ON B.branch_ID = R.branch_ID
+
+	-- 3. Display guest data along with the bookings they made. 
+	SELECT 
+    C.*,
+    B.booking_ID,
+    B.check_in,
+    B.check_out
+FROM Customer C
+LEFT JOIN Booking B
+    ON C.customer_ID = B.customer_ID
+
+-- 4. Display bookings for hotels in 'Hurghada' or 'Sharm El Sheikh'. 
+select * from Branch
+SELECT 
+    Bk.booking_ID,
+    Bk.check_in,
+    Bk.check_out,
+    Br.Branch_name AS Hotel_Name,
+    Br.Branch_location
+FROM Branch Br
+JOIN Room R
+    ON Br.branch_ID = R.branch_ID
+JOIN Room_Booking RB
+    ON R.room_number = RB.room_number
+JOIN Booking Bk
+    ON RB.booking_ID = Bk.booking_ID
+WHERE Br.Branch_location IN ('Muscat', 'Salalah')
+
+-- 5. Display all room records where room type starts with "S" (e.g., "Suite", "Single"). 
+SELECT *
+FROM Room
+WHERE room_type LIKE 'S%'
+
+-- 6. List guests who booked rooms priced between 1500 and 2500 LE.
+SELECT 
+    C.customer_name,
+	R.nightly_rate
+FROM Customer C
+JOIN Booking B
+    ON C.customer_ID = B.customer_ID
+JOIN Room_Booking RB
+    ON B.booking_ID = RB.booking_ID
+JOIN Room R
+    ON RB.room_number = R.room_number
+WHERE R.nightly_rate BETWEEN 15 AND 50
+
+-- 7. Retrieve guest names who have bookings marked as 'Confirmed' in hotel "Hilton Downtown". 
+select * from Booking
+select * from Branch
+SELECT 
+    C.customer_name,
+	Br.Branch_name,
+	B.status
+FROM Customer C
+JOIN Booking B
+    ON C.customer_ID = B.customer_ID
+JOIN Room_Booking RB
+    ON B.booking_ID = RB.booking_ID
+JOIN Room R
+    ON RB.room_number = R.room_number
+JOIN Branch Br
+    ON R.branch_ID = Br.branch_ID
+WHERE B.status = 'Completed'
+  AND Br.Branch_name = 'Muscat Branch'
+
+  -- 8. Find guests whose bookings were handled by staff member "Mona Ali". 
+    select * from Staff
+	SELECT 
+    C.customer_name,
+	s.staff_name
+FROM Staff S
+JOIN Staff_Booking SB
+    ON S.staff_ID = SB.staff_ID
+JOIN Booking B
+    ON SB.booking_ID = B.booking_ID
+JOIN Customer C
+    ON B.customer_ID = C.customer_ID
+WHERE S.staff_name = 'Khalid Salem'
+
+-- 9. Display each guest’s name and the rooms they booked, ordered by room type. 
+SELECT 
+    C.customer_name,
+    R.room_number,
+    R.room_type
+FROM Customer C
+JOIN Booking B
+    ON C.customer_ID = B.customer_ID
+JOIN Room_Booking RB
+    ON B.booking_ID = RB.booking_ID
+JOIN Room R
+    ON RB.room_number = R.room_number
+ORDER BY R.room_type
+
+-- 10. For each hotel in 'Cairo', display hotel ID, name, manager name, and contact info. 
+SELECT 
+    Br.branch_ID AS Hotel_ID,
+    Br.Branch_name AS Hotel_Name,
+    S.staff_name AS Manager_Name,
+    S.staff_job_title,
+    S.staff_salary
+FROM Branch Br
+JOIN Staff S
+    ON Br.branch_ID = S.branch_ID
+WHERE Br.Branch_location = 'Muscat'
+  AND S.staff_job_title = 'Manager'
+
+  -- 11. Display all staff members who hold 'Manager' positions. 
+  SELECT *
+FROM Staff
+WHERE staff_job_title = 'Manager'

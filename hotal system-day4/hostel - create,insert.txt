@@ -1,0 +1,103 @@
+create database hostel
+use database hostel
+
+CREATE TABLE Branch (
+    branch_ID INT IDENTITY(1,1) PRIMARY KEY,
+    Branch_name VARCHAR(50) NOT NULL,
+    Branch_location VARCHAR(100) NOT NULL
+)
+
+CREATE TABLE Customer (
+    customer_ID INT IDENTITY(1,1) PRIMARY KEY,
+    customer_name VARCHAR(50) NOT NULL,
+    customer_phone VARCHAR(20),
+    customer_email VARCHAR(100)
+)
+
+CREATE TABLE Staff (
+    staff_ID INT IDENTITY(1,1) PRIMARY KEY,
+    staff_name VARCHAR(50) NOT NULL,
+    staff_job_title VARCHAR(50),
+    staff_salary DECIMAL(10,2),
+    branch_ID INT,
+    FOREIGN KEY (branch_ID) REFERENCES Branch(branch_ID)
+)
+
+CREATE TABLE Room (
+    room_number INT IDENTITY(1,1) PRIMARY KEY,
+    room_type VARCHAR(30) NOT NULL,
+    nightly_rate DECIMAL(10,2) NOT NULL,
+    branch_ID INT,
+    FOREIGN KEY (branch_ID) REFERENCES Branch(branch_ID)
+)
+
+CREATE TABLE Booking (
+    booking_ID INT IDENTITY(1,1) PRIMARY KEY,
+    check_in DATE NOT NULL,
+    check_out DATE NOT NULL,
+    customer_ID INT,
+    FOREIGN KEY (customer_ID) REFERENCES Customer(customer_ID)
+)
+CREATE TABLE Room_Booking (
+    room_number INT,
+    booking_ID INT,
+    PRIMARY KEY (room_number, booking_ID),
+    FOREIGN KEY (room_number) REFERENCES Room(room_number),
+    FOREIGN KEY (booking_ID) REFERENCES Booking(booking_ID)
+)
+
+CREATE TABLE Staff_Booking (
+    staff_ID INT,
+    booking_ID INT,
+    PRIMARY KEY (staff_ID, booking_ID),
+    FOREIGN KEY (staff_ID) REFERENCES Staff(staff_ID),
+    FOREIGN KEY (booking_ID) REFERENCES Booking(booking_ID)
+)
+------------------------------------------------------------------
+INSERT INTO Branch (Branch_name, Branch_location)
+VALUES 
+('Muscat Branch', 'Muscat'),
+('Salalah Branch', 'Salalah')
+select * from Branch
+
+INSERT INTO Customer (customer_name, customer_phone, customer_email)
+VALUES
+('Ahmed Al Said', '91234567', 'ahmed@gmail.com'),
+('Fatma Al Harthy', '92345678', 'fatma@gmail.com')
+select * from Customer
+
+INSERT INTO Staff (staff_name, staff_job_title, staff_salary, branch_ID)
+VALUES
+('Ali Hassan', 'Receptionist', 450.00, 1),
+('Sara Mohammed', 'Manager', 800.00, 1),
+('Khalid Salem', 'Receptionist', 400.00, 2)
+select * from Staff
+
+INSERT INTO Room (room_type, nightly_rate, branch_ID)
+VALUES
+('Single', 25.00, 1),
+('Double', 40.00, 1),
+('Suite', 70.00, 2)
+select * from Room
+
+INSERT INTO Booking (check_in, check_out, customer_ID)
+VALUES
+('2025-01-10', '2025-01-15', 1),
+('2025-02-01', '2025-02-05', 2)
+select * from Booking
+
+INSERT INTO Room_Booking (room_number, booking_ID)
+VALUES
+(1, 1),
+(2, 1),
+(3, 2)
+select * from Room_Booking
+
+INSERT INTO Staff_Booking (staff_ID, booking_ID)
+VALUES
+(1, 1),
+(2, 1),
+(3, 2)
+select * from Staff_Booking
+
+-----------------------------------------------
